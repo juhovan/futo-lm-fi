@@ -36,10 +36,11 @@ RUN pip install --no-cache-dir \
 # output.weight to Q6_K to match the reference English model, (c) the final
 # llama-cli smoke test that proves the shipped .gguf actually loads and runs.
 ARG LLAMA_CPP_TAG=v0.8.0
-# The pytorch base image ships no git (and no system cmake; the pip cmake above
-# provides it), so install git in this layer before the clone.
+# The runtime pytorch base image ships no C++ toolchain (the -devel variant
+# did), so install git + build-essential in this layer before the clone.
+# (No system cmake either; the pip cmake above provides it.)
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends git \
+    && apt-get install -y --no-install-recommends git build-essential \
     && rm -rf /var/lib/apt/lists/* \
     && git clone --recurse-submodules --depth 1 https://github.com/ggerganov/llama.cpp /opt/llama.cpp \
     && cd /opt/llama.cpp \
