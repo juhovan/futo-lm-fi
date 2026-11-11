@@ -13,7 +13,7 @@
 # The pipeline code is baked into the image at /pipeline; a code change means a
 # new image (built by .github/workflows/build.yml, pushed to ghcr.io/juhovan/futo-lm-fi).
 
-FROM pytorch/pytorch:2.6.0-cuda12.4-cudnn9
+FROM pytorch/pytorch:2.6.0-cuda12.4-cudnn9-runtime
 
 ENV PYTHONUNBUFFERED=1 \
     PIP_NO_CACHE_DIR=1 \
