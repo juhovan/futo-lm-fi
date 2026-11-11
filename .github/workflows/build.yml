@@ -29,21 +29,15 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract image metadata
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ghcr.io/juhovan/futo-lm-fi
-          tags: |
-            type=sha,prefix=sha-
-            type=raw,value=latest,enable={{ github.ref == 'refs/heads/master' }}
-
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
           context: .
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          # sha-<commit>: immutable per build. latest: only this workflow
+          # runs, and only on master pushes, so it never points elsewhere.
+          tags: |
+            ghcr.io/juhovan/futo-lm-fi:sha-${{ github.sha }}
+            ghcr.io/juhovan/futo-lm-fi:latest
           cache-from: type=gha
           cache-to: type=gha
