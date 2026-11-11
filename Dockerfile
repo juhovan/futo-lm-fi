@@ -1,8 +1,11 @@
 # FUTO Keyboard Finnish LM pipeline (one-off training job container).
 #
-# Base image is the same verified PyTorch image the futo-portuguese project ran
-# end-to-end on: torch 2.6.0 + CUDA 12.4 + cudnn9, preinstalled. Nothing else
-# here is a runtime dependency of other services.
+# Base image is the same verified PyTorch image the futo-portuguese pipeline
+# ran end-to-end on: torch 2.6.0 + CUDA 12.4 + cudnn9, preinstalled. The
+# runtime variant (not -devel) is enough: no CUDA extensions are compiled in
+# the image (llama.cpp is built CPU-only, GGML_CUDA=OFF), and the runtime
+# variant is several GB smaller — a -devel base fills a free GitHub runner's
+# disk during the build.
 #
 # The job itself needs no GPU for corpus/tokenizer/export/eval; the pretrain and
 # finetune stages use the reserved NVIDIA device (see the host's compose override).
@@ -10,7 +13,7 @@
 # The pipeline code is baked into the image at /pipeline; a code change means a
 # new image (built by .github/workflows/build.yml, pushed to ghcr.io/juhovan/futo-lm-fi).
 
-FROM pytorch/pytorch:2.6.0-cuda12.4-cudnn9-devel
+FROM pytorch/pytorch:2.6.0-cuda12.4-cudnn9
 
 ENV PYTHONUNBUFFERED=1 \
     PIP_NO_CACHE_DIR=1 \
