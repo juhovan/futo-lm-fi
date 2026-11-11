@@ -50,7 +50,7 @@ RUN apt-get update \
 # Pipeline code (versioned in this repo; the entrypoint runs it directly).
 COPY pipeline/ /pipeline/
 
-# All artifacts go under /work (=/docker/data/futo-lm-fi on the host).
+# All artifacts go under /work (a host-mounted data volume).
 WORKDIR /work
 
 ENTRYPOINT ["python", "/pipeline/pipeline.py"]
