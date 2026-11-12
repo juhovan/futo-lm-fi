@@ -41,3 +41,8 @@ jobs:
             ghcr.io/juhovan/futo-lm-fi:latest
           cache-from: type=gha
           cache-to: type=gha
+
+      - name: Show image digest
+        # The manifest-list digest, for pinning consumers:
+        # ghcr.io/juhovan/futo-lm-fi:sha-<commit>@sha256:<digest-from-this-step>
+        run: docker buildx imagetools inspect ghcr.io/juhovan/futo-lm-fi:sha-${{ github.sha }} | grep -m1 'sha256:'
